@@ -5,7 +5,7 @@
     "sections": [
       {
         "title": "Schemes",
-        "sql": "select * from taxonomy_week"
+        "sql": "select code,name,owner,active_concepts,reviews,missing_translations,overdue_requests from taxonomy_week order by code"
       },
       {
         "title": "Editorial queue",
