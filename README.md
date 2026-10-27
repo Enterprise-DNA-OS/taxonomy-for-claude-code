@@ -1,115 +1,127 @@
-<h1 align="center">Taxonomy for Claude Code</h1>
+# Taxonomy for Claude Code
 
-<p align="center">
-  <strong>The open-source taxonomy desk that is just a database and Claude Code.</strong>
-</p>
+Keep the words your business agrees on, and the evidence behind each change. An owned database for controlled vocabularies, multilingual labels, hierarchy review and internal release records. Built by Enterprise DNA.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free, MIT. Install the database and command recipes. | Your terms, fields, review rules and PoolParty export mapping. A web front end or different stack if wanted. | Installed and operated through Omni by Enterprise DNA. One setup fee, then a retainer. |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your PoolParty data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=poolparty">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/poolparty?utm_source=github&utm_medium=readme&utm_campaign=poolparty">How it works</a></td>
-  </tr>
-</table>
+[Get your version built](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_campaign=poolparty)
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-poolparty">Instead of PoolParty</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+## Start with the weekly work
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
+Review terms, fill translation gaps, resolve colliding labels, decide editorial requests and prepare an internal release snapshot. Definitions and relations are records you can inspect. Changing a term invalidates its approval. A release waits for current approvals, resolved requests, complete required languages and a clean quality check.
 
----
-
-## What is this
-
-Taxonomy for Claude Code does the job you pay PoolParty for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the PoolParty dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays PoolParty per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=poolparty).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+PoolParty is now part of Graphwise. Its [pricing link](https://www.poolparty.biz/priceoverview) redirects to the platform page asking for a quote, checked 27 October 2026. This free desk covers the internal vocabulary work; semantic extraction, search services, graph editing and live content connections are separate scope for your version.
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or newer. Works with Claude Code, Codex, OpenCode or Cursor. No paid model API is needed by the CLI.
 
 ```bash
-git clone https://github.com/Enterprise-DNA-OS/taxonomy-for-claude-code.git
-cd taxonomy-for-claude-code
 npm install
 npm run demo
+node scripts/taxonomy.mjs review-terms
+node scripts/taxonomy.mjs translation-gaps
+node scripts/taxonomy.mjs release-check OPS --json
+npm run view
+npm run docs
+npm test
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+The demo contains fictional records, overdue requests and missing translations. For your business, use a fresh DATA_DIR and run npm run migrate without seeding. DATABASE_URL selects a dedicated Postgres service; otherwise PGlite runs locally. One process at a time uses the embedded database. Shared use needs a secured server and managed backups.
 
-### Use it with your own Postgres or Supabase
+## Commands
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+Prefix each with node scripts/taxonomy.mjs. Every command supports --json. Partial ids and case-insensitive names work; ambiguous matches list candidates and exit with status 1.
 
-## The commands
+- `help`
+- `schemes`
+- `concepts`
+- `taxonomy-week`
+- `review-terms`
+- `translation-gaps`
+- `label-collisions`
+- `editorial-queue`
+- `attention`
+- `compliance`
+- `insights`
+- `show <concept>`
+- `hierarchy <concept>`
+- `history <scheme>`
+- `release-check <scheme>`
+- `releases <scheme>`
+- `add-scheme --code= --name= --uri= --owner= --languages=en,mi --actor=`
+- `add <scheme> --code= --uri= --label= --lang=en --definition= --owner= --review-due= --actor=`
+- `edit-term <concept> --definition= --owner= --review-due= --note= --actor=`
+- `add-label <concept> --kind=pref|alt|hidden --lang= --value= --actor=`
+- `remove-label <label-id> --note= --actor=`
+- `relate <concept> --to= --kind=broader|related --actor=`
+- `unrelate <relation-id> --note= --actor=`
+- `request-change <concept> --title= --owner= --due= --actor=`
+- `decide-request <request-id> --decision=accepted|rejected --note= --actor=`
+- `approve <concept> --review-due= --note= --actor=`
+- `retire <concept> --replacement= --note= --actor=`
+- `log <concept> --note= --actor=`
+- `record-release <scheme> --version= --note= --actor=`
+- `import poolparty <csv-or-rdf-json> --scheme= --source= --map= --actor= [--dry-run]`
+- `export --out=<new.json>`
+- `export-skos <scheme> --out=<new.json>`
+- `weekly-review`
+- `draft-vocabulary <scheme>`
+- `draft-release-note <scheme>`
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+35 CLI commands with matching recipes, plus /customise and /new-view. Mutations require an actor name. Label and relation removals preserve the before value in the history.
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+## Bring your vocabulary
 
-## Instead of PoolParty
+PoolParty exports RDF/JSON and CSV. One import command reads a single unzipped RDF/JSON export or a mapped CSV. Preview first, inspect ignored predicates, apply, and reconcile counts. Imported terms await an owner, a review date and approval.
 
-<!-- TODO(author): how to bring data across from PoolParty; link docs/replace-poolparty.md -->
-
-## Architecture
-
+```bash
+node scripts/taxonomy.mjs import poolparty examples/poolparty.csv --scheme=GUIDES --source=demo/terms --map=examples/column-map.json --actor=Editor --dry-run
+node scripts/taxonomy.mjs export --out=exports/taxonomy.json
 ```
-taxonomy-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
 
-## Built for coding agents
+The examples are synthetic, not a universal vendor layout. Repeat imports skip identical batches. Changed source records stop for reconciliation. Raw evidence is retained. [Mapping and switch guide](docs/replace-poolparty.md).
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Ten questions to ask
 
-## Contributing
+The insights command answers all ten from current records. These combine your editorial rules and working history. They do not claim the vendor can never produce a similar report.
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+1. Which overdue terms also have open requests?
+2. Which language gaps belong to overdue terms?
+3. Which labels mean more than one thing?
+4. Which active terms lack a definition?
+5. Which active terms have no owner?
+6. Which active terms point to a retired term?
+7. Which terms have more than one broader parent?
+8. Which draft terms have gone untouched for a month?
+9. Which requests are overdue, grouped by owner?
+10. Which schemes have no recorded release?
 
-## Want it installed and run for you?
+## Your first hour: ten things to ask for
 
-Enterprise DNA installs Taxonomy for Claude Code for your business, migrates your PoolParty data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+1. Put our business name, logo and colours in brand.json.
+2. Add our vocabulary with its existing scheme URI.
+3. Set the languages our editors actually maintain.
+4. Preview a saved PoolParty export and inspect the ignored fields.
+5. Reconcile the imported term and relationship counts.
+6. Assign an owner and review date to each active term.
+7. Find labels that identify more than one thing.
+8. Record the editorial requests needed to resolve those clashes.
+9. Read the release blockers before recording a baseline.
+10. Add our review rule through /customise and test it.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=poolparty)
-- Read more: [enterprisedna.co/omni/instead-of/poolparty](https://enterprisedna.co/omni/instead-of/poolparty?utm_source=github&utm_medium=readme&utm_campaign=poolparty)
+## Documents and views
 
-## License
+Three read-only dashboards show the week, quality gaps and review work. npm run docs renders a vocabulary register and editorial review brief for each scheme, plus a release record for each recorded release. brand.json controls the business name, logo and colours. Draft vocabulary reviews and release notes stay in drafts. Nothing sends or publishes.
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+## Boundaries
+
+This is one organisation's internal terminology desk. It supports one scheme per concept, stable HTTP(S) URIs, preferred/alternative/hidden labels, broader and related links, editorial requests and release snapshots. Standards checks cite [W3C SKOS](docs/compliance.md); extra review and hierarchy restrictions are labelled local rules. It is not a full semantic platform or legal compliance certification.
+
+There is no browser editing, mobile application, offline shared capture, authenticated approval, attachment store, public portal, semantic extraction, reasoning engine or live content connection. See [why no front end](docs/why-no-front-end.md).
+
+Public database roles have no access by default. A database owner can bypass those restrictions and application rules, including audit history. Actor labels are not verified identities. Use protected credentials, secured hosting and native backups. JSON exports contain private source records and are not a tested restore system. RDF/JSON export includes active draft terms, so check readiness before external use. Generated files use restrictive permissions where supported; secure Windows folders separately.
+
+[Verification scope](docs/verification.md). MIT. Built by Enterprise DNA.

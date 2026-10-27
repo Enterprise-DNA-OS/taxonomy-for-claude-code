@@ -1,0 +1,37 @@
+{
+  "https://example.org/rdf/guide": {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+      {
+        "type": "uri",
+        "value": "http://www.w3.org/2004/02/skos/core#Concept"
+      }
+    ],
+    "http://www.w3.org/2004/02/skos/core#prefLabel": [
+      {
+        "type": "literal",
+        "value": "Reference guide",
+        "lang": "en"
+      }
+    ],
+    "http://www.w3.org/2004/02/skos/core#altLabel": [
+      {
+        "type": "literal",
+        "value": "Handbook",
+        "lang": "en"
+      }
+    ],
+    "http://www.w3.org/2004/02/skos/core#definition": [
+      {
+        "type": "literal",
+        "value": "Instructions retained for reference.",
+        "lang": "en"
+      }
+    ],
+    "https://example.org/custom/purpose": [
+      {
+        "type": "literal",
+        "value": "Preserved in the import evidence."
+      }
+    ]
+  }
+}

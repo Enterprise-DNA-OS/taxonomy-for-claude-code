@@ -1,11 +1,60 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "vocabulary-register",
+    "title": "Vocabulary register",
+    "for_each": "select id,code from schemes",
+    "file": "code",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Scheme",
+        "layout": "record",
+        "sql": "select code,name,uri,owner,languages from schemes where id=$1"
+      },
+      {
+        "title": "Terms",
+        "sql": "select code,name,definition,owner,status,review_due from concept_register where scheme_id=$1 order by code"
+      },
+      {
+        "title": "Labels",
+        "sql": "select c.code,l.kind,l.lang,l.value from labels l join concepts c on c.id=l.concept_id where c.scheme_id=$1 order by c.code,l.lang,l.kind"
+      }
+    ]
+  },
+  {
+    "name": "editorial-review",
+    "title": "Editorial review brief",
+    "for_each": "select id,code from schemes",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Review work",
+        "sql": "select code,name,owner,review_due,reason from review_queue where scheme_id=$1"
+      },
+      {
+        "title": "Translation gaps",
+        "sql": "select code,name,lang from translation_gaps where scheme_id=$1"
+      },
+      {
+        "title": "Requests",
+        "sql": "select c.code,r.title,r.owner,r.due,r.status,r.decision_note from requests r join concepts c on c.id=r.concept_id where c.scheme_id=$1 order by r.due"
+      }
+    ]
+  },
+  {
+    "name": "release-record",
+    "title": "Internal vocabulary release record",
+    "for_each": "select id,version from releases",
+    "file": "version",
+    "sections": [
+      {
+        "title": "Decision",
+        "layout": "record",
+        "sql": "select version,actor,note,created_at from releases where id=$1"
+      },
+      {
+        "title": "Snapshot terms",
+        "sql": "select c->>'code' code,c->>'uri' uri,c->>'definition' definition,c->>'status' status from releases r,jsonb_array_elements(r.snapshot->'concepts') c where r.id=$1"
+      }
     ]
   }
 ]

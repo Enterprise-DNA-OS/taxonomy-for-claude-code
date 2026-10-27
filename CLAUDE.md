@@ -1,43 +1,63 @@
-# Taxonomy for Claude Code: operating instructions
+# Taxonomy for Claude Code
 
-This file is the brain. Claude Code reads it at the start of every session. It says who this is for, how work gets done, and the one right way to do each recurring job.
+Run the internal terminology desk for the operator's organisation. Ask for the intended scheme when it is unclear. Read records before changing them. Every answer starts with CLI evidence.
 
-## Who this is for
+## Routing
 
-- **Business:** [YOUR BUSINESS]
-- **Operator:** [YOUR NAME], [your role]
-- **What matters most:** [the one or two outcomes you care about]
-
-Fill this in once. A worker with context knows. A worker without it guesses.
-
-## How to work
-
-1. **Take a brief, not a script.** The operator describes the outcome. You run the right command and present the answer.
-2. **Read before you write.** Before drafting anything about a record, read its full history first.
-3. **Plain language.** Short sentences. No filler. Numbers in tables.
-4. **Silent success, loud problems.** No play-by-play. Say what broke and what you did about it.
-5. **Stop at the line.** Anything that sends, deletes, or faces a customer waits for a yes in this session.
-
-## Routing table: one right way for each recurring job
-
-| When the operator asks for... | Use this |
+| Job | Command |
 |---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+| help | node scripts/taxonomy.mjs help  |
+| schemes | node scripts/taxonomy.mjs schemes  |
+| concepts | node scripts/taxonomy.mjs concepts  |
+| taxonomy-week | node scripts/taxonomy.mjs taxonomy-week  |
+| review-terms | node scripts/taxonomy.mjs review-terms  |
+| translation-gaps | node scripts/taxonomy.mjs translation-gaps  |
+| label-collisions | node scripts/taxonomy.mjs label-collisions  |
+| editorial-queue | node scripts/taxonomy.mjs editorial-queue  |
+| attention | node scripts/taxonomy.mjs attention  |
+| compliance | node scripts/taxonomy.mjs compliance  |
+| insights | node scripts/taxonomy.mjs insights  |
+| show | node scripts/taxonomy.mjs show <concept> |
+| hierarchy | node scripts/taxonomy.mjs hierarchy <concept> |
+| history | node scripts/taxonomy.mjs history <scheme> |
+| release-check | node scripts/taxonomy.mjs release-check <scheme> |
+| releases | node scripts/taxonomy.mjs releases <scheme> |
+| add-scheme | node scripts/taxonomy.mjs add-scheme --code= --name= --uri= --owner= --languages=en,mi --actor= |
+| add | node scripts/taxonomy.mjs add <scheme> --code= --uri= --label= --lang=en --definition= --owner= --review-due= --actor= |
+| edit-term | node scripts/taxonomy.mjs edit-term <concept> --definition= --owner= --review-due= --note= --actor= |
+| add-label | node scripts/taxonomy.mjs add-label <concept> --kind=pref / alt / hidden --lang= --value= --actor= |
+| remove-label | node scripts/taxonomy.mjs remove-label <label-id> --note= --actor= |
+| relate | node scripts/taxonomy.mjs relate <concept> --to= --kind=broader / related --actor= |
+| unrelate | node scripts/taxonomy.mjs unrelate <relation-id> --note= --actor= |
+| request-change | node scripts/taxonomy.mjs request-change <concept> --title= --owner= --due= --actor= |
+| decide-request | node scripts/taxonomy.mjs decide-request <request-id> --decision=accepted / rejected --note= --actor= |
+| approve | node scripts/taxonomy.mjs approve <concept> --review-due= --note= --actor= |
+| retire | node scripts/taxonomy.mjs retire <concept> --replacement= --note= --actor= |
+| log | node scripts/taxonomy.mjs log <concept> --note= --actor= |
+| record-release | node scripts/taxonomy.mjs record-release <scheme> --version= --note= --actor= |
+| import | node scripts/taxonomy.mjs import poolparty <csv-or-rdf-json> --scheme= --source= --map= --actor= [--dry-run] |
+| export | node scripts/taxonomy.mjs export --out=<new.json> |
+| export-skos | node scripts/taxonomy.mjs export-skos <scheme> --out=<new.json> |
+| weekly-review | node scripts/taxonomy.mjs weekly-review  |
+| draft-vocabulary | node scripts/taxonomy.mjs draft-vocabulary <scheme> |
+| draft-release-note | node scripts/taxonomy.mjs draft-release-note <scheme> |
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+Each command has a recipe in .claude/commands. /customise changes fields and rules through a tested migration. /new-view adds a read-only report.
 
-## Hard rules
+## Rules
 
-- Never send email or messages from here. Draft to `drafts/`, a person sends.
-- Never delete records without an explicit yes in this session. Prefer marking closed or archived.
-- Never invent a record. If a name is ambiguous, list the candidates and ask.
-- The database is the source of truth. If the answer is not in it, say so.
+- Never send, publish or operate a connected content system. A release is an internal snapshot.
+- Obtain explicit approval before removing a label or relation. Removal retains an audit event. Prefer retirement for a concept.
+- Never invent a translation, definition, review decision or source URI. Show ambiguous candidates.
+- Inspect source exports and preview imports. Reconcile ignored predicates and counts.
+- Approvals refer to the current term. Editing it returns it to review.
+- The actor name is a recorded label, not verified identity. Database-owner access needs protection.
+- Keep raw exports, drafts, credentials and working databases out of git.
+- Do not seed a working database. Tests must use disposable data.
+- Read docs/compliance.md and docs/replace-poolparty.md before changing rule or import behaviour.
 
-## Where things live
+## Files
 
-- `scripts/` the CLI. `scripts/lib/db.mjs` picks `DATABASE_URL` (Postgres, Supabase) or the embedded database in `.data/`.
-- `supabase/migrations/` the schema, plain SQL. `npm run migrate` applies it.
-- `.claude/commands/` the slash commands. Add one every time the same ask comes twice.
-- `docs/` the thesis and the guide for moving off PoolParty.
+scripts/taxonomy.mjs is the one CLI. supabase/migrations contains ordered migrations. views.json and documents.json define read-only output. brand.json controls business branding. DATABASE_URL selects Postgres; otherwise DATA_DIR selects the local PGlite folder.
 
-Built by Enterprise DNA. Installed and run for you as part of Omni: https://enterprisedna.co/omni/instead-of/poolparty
+Omni by Enterprise DNA installs, customises and runs this system: https://enterprisedna.co/omni/instead-of/poolparty

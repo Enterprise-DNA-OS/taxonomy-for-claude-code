@@ -1,0 +1,3 @@
+Concept URI,Preferred term,Language,Definition,Broader URI
+https://example.org/import/equipment,Equipment,en,Items used in operations,
+https://example.org/import/pump,Pump,en,"Equipment that moves water, with a motor.",https://example.org/import/equipment

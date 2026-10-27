@@ -1,13 +1,39 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Taxonomy for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Vocabulary week",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Schemes",
+        "sql": "select * from taxonomy_week"
+      },
+      {
+        "title": "Editorial queue",
+        "sql": "select c.code,r.title,r.owner,r.due,r.status from requests r join concepts c on c.id=r.concept_id where r.status='open'"
+      }
+    ]
+  },
+  {
+    "name": "quality",
+    "title": "Terminology quality",
+    "sections": [
+      {
+        "title": "Missing translations",
+        "sql": "select scheme,code,name,lang from translation_gaps"
+      },
+      {
+        "title": "Label collisions",
+        "sql": "select lang,label,concepts,codes from label_collisions"
+      }
+    ]
+  },
+  {
+    "name": "review",
+    "title": "Terms needing review",
+    "sections": [
+      {
+        "title": "Review queue",
+        "sql": "select scheme,code,name,owner,status,review_due,reason from review_queue"
       }
     ]
   }
